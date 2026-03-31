@@ -3,7 +3,7 @@ const validator = require('validator');
 
 // Validate user registration input
 const validateUserRegistration = (req, res, next) => {
-  const { firstName, lastName, email, password, phone, licenseNumber, licenseExpiry } = req.body;
+  const { firstName, lastName, email, password, phone, address, city, state, zipCode, licenseNumber, licenseExpiry } = req.body;
 
   const errors = [];
 
@@ -32,8 +32,28 @@ const validateUserRegistration = (req, res, next) => {
   }
 
   // Phone validation
-  if (!phone || !validator.isLength(phone, { min: 10, max: 10 })) {
+  if (!phone || !/^\d{10}$/.test(phone)) {
     errors.push('Phone number must be 10 digits');
+  }
+
+  // Address validation
+  if (!address || address.trim() === '') {
+    errors.push('Address is required');
+  }
+
+  // City validation
+  if (!city || city.trim() === '') {
+    errors.push('City is required');
+  }
+
+  // State validation
+  if (!state || state.trim() === '') {
+    errors.push('State is required');
+  }
+
+  // Zip code validation
+  if (!zipCode || zipCode.trim() === '') {
+    errors.push('Zip code is required');
   }
 
   // License number validation

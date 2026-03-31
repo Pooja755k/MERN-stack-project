@@ -96,8 +96,13 @@ const Register = () => {
       toast.success('Registration successful!');
       navigate('/');
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed';
-      toast.error(message);
+      // Handle validation errors from server
+      if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+        error.response.data.errors.forEach(err => toast.error(err));
+      } else {
+        const message = error.response?.data?.message || 'Registration failed';
+        toast.error(message);
+      }
     } finally {
       setIsLoading(false);
     }

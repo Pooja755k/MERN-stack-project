@@ -74,8 +74,8 @@ const bookingSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['Credit Card', 'Debit Card', 'UPI', 'Net Banking'],
-      default: null,
+      enum: ['Credit Card', 'Debit Card', 'UPI', 'Net Banking', 'Cash on Delivery', 'Digital Wallet'],
+      required: [true, 'Payment method is required'],
     },
     // Special Requirements/Notes
     specialRequirements: {

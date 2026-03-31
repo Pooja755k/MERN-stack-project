@@ -23,6 +23,7 @@ const createBooking = async (req, res) => {
       dropoffLocation,
       specialRequirements,
       insuranceSelected,
+      paymentMethod,
     } = req.body;
 
     const userId = req.userId;
@@ -84,6 +85,7 @@ const createBooking = async (req, res) => {
       insuranceSelected,
       insuranceCost,
       specialRequirements: specialRequirements ? specialRequirements.trim() : '',
+      paymentMethod: paymentMethod || 'Credit Card',
       status: 'Pending',
       paymentStatus: 'Pending',
     });
@@ -125,7 +127,7 @@ const getMyBookings = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const bookings = await Booking.find(filter)
-      .populate('carId', 'name brand model rentPerDay fuelType seatingCapacity')
+      .populate('carId', 'name brand model rentPerDay fuelType seatingCapacity images')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
@@ -181,7 +183,7 @@ const getBookingDetails = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Booking details retrieved',
-      booking,
+      data: booking,
     });
   } catch (error) {
     console.error('Get booking details error:', error);

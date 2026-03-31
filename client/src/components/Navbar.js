@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/login');
   };
 
   return (
@@ -28,6 +28,10 @@ const Navbar = () => {
               Home
             </Link>
 
+            <Link to="/cars" className="nav-link">
+              Cars
+            </Link>
+
             {isAuthenticated ? (
               <>
                 <Link to="/bookings" className="nav-link">
@@ -37,13 +41,7 @@ const Navbar = () => {
                 {user?.role === 'admin' && (
                   <>
                     <Link to="/admin" className="nav-link">
-                      Admin Dashboard
-                    </Link>
-                    <Link to="/admin/cars" className="nav-link">
-                      Manage Cars
-                    </Link>
-                    <Link to="/admin/bookings" className="nav-link">
-                      All Bookings
+                      admin AA
                     </Link>
                   </>
                 )}

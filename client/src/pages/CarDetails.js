@@ -61,7 +61,7 @@ const CarDetails = () => {
           <div className="main-image">
             {car.images && car.images.length > 0 ? (
               <img
-                src={`http://localhost:5000${car.images[selectedImageIndex]}`}
+                src={car.images[selectedImageIndex].startsWith('http') ? car.images[selectedImageIndex] : `http://localhost:5000${car.images[selectedImageIndex]}`}
                 alt={car.name}
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/600x400?text=Car+Image';
@@ -77,7 +77,7 @@ const CarDetails = () => {
               {car.images.map((image, index) => (
                 <img
                   key={index}
-                  src={`http://localhost:5000${image}`}
+                  src={image.startsWith('http') ? image : `http://localhost:5000${image}`}
                   alt={`${car.name} ${index + 1}`}
                   className={`thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
                   onClick={() => setSelectedImageIndex(index)}

@@ -19,7 +19,6 @@ const Home = () => {
     page: 1,
   });
 
-  // Fetch cars on component mount and when filters change
   useEffect(() => {
     fetchCars();
   }, [filters]);
@@ -42,7 +41,7 @@ const Home = () => {
     setFilters(prev => ({
       ...prev,
       [name]: value,
-      page: 1, // Reset to first page on filter change
+      page: 1,
     }));
   };
 
@@ -151,77 +150,225 @@ const Home = () => {
                   placeholder="10000"
                 />
               </div>
-            </div>
 
-            <button type="submit" className="btn btn-primary">
-              Search
-            </button>
+              <button type="submit" className="btn btn-primary">
+                Apply Filters
+              </button>
+            </div>
           </form>
         </section>
 
         {/* Cars Grid */}
         <section className="cars-section">
-          <h2>Available Cars</h2>
+          <h2>Featured Cars</h2>
+          
           {isLoading ? (
             <div className="loading-container">
               <div className="loading"></div>
               <p>Loading cars...</p>
             </div>
-          ) : cars.length > 0 ? (
-            <div className="cars-grid">
-              {cars.map(car => (
-                <div key={car._id} className="car-card">
-                  {/* Car Image */}
-                  <div className="car-image">
-                    {car.images && car.images.length > 0 ? (
-                      <img
-                        src={`http://localhost:5000${car.images[0]}`}
-                        alt={car.name}
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/400x250?text=Car+Image';
-                        }}
-                      />
-                    ) : (
-                      <div className="placeholder">No Image</div>
-                    )}
-                  </div>
-
-                  {/* Car Info */}
-                  <div className="car-info">
-                    <h3>{car.name}</h3>
-                    <p className="car-brand">{car.brand} {car.model} ({car.year})</p>
-
-                    {/* Car Details */}
-                    <div className="car-details">
-                      <span>🚗 {car.seatingCapacity} Seater</span>
-                      <span>⛽ {car.fuelType}</span>
-                      <span>🔄 {car.transmission}</span>
-                    </div>
-
-                    {/* Price */}
-                    <div className="car-price">
-                      <span className="price">{formatCurrency(car.rentPerDay)}</span>
-                      <span className="per-day">per day</span>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="car-actions">
-                      <Link to={`/cars/${car._id}`} className="btn btn-primary btn-sm">
-                        View Details
-                      </Link>
-                      <Link to={`/booking/${car._id}`} className="btn btn-secondary btn-sm">
-                        Book Now
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          ) : cars.length === 0 ? (
+            <div className="no-results">
+              <p>No cars found matching your criteria</p>
             </div>
           ) : (
-            <div className="no-cars">
-              <p>No cars found matching your filters.</p>
-            </div>
+            <>
+              <div className="cars-grid">
+                {cars.slice(0, 3).map((car) => (
+                  <div key={car._id} className="car-card">
+                    <div className="car-image">
+                      <img
+                        src={car.images[0]?.startsWith('http') ? car.images[0] : `http://localhost:5000${car.images[0]}`}
+                        alt={car.name}
+                      />
+                    </div>
+                    <div className="car-info">
+                      <h3>{car.name}</h3>
+                      <p className="car-brand">{car.brand} {car.model}</p>
+                      
+                      <div className="car-features">
+                        <span>🪑 {car.seatingCapacity} Seats</span>
+                        <span>⛽ {car.fuelType}</span>
+                        <span>⚙️ {car.transmission}</span>
+                        <span>📊 {car.mileage} km/l</span>
+                      </div>
+
+                      <div className="car-footer">
+                        <div className="car-price">
+                          <span className="price-label">Per Day</span>
+                          <span className="price-value">{formatCurrency(car.rentPerDay)}</span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <Link to={`/cars/${car._id}`} className="btn" style={{ flex: 1, textAlign: 'center', background: '#6c757d', color: 'white', textDecoration: 'none', padding: '0.5rem 1rem' }}>
+                            Details
+                          </Link>
+                          <Link to={`/booking/${car._id}`} className="btn btn-primary" style={{ flex: 1, textAlign: 'center', textDecoration: 'none', padding: '0.5rem 1rem' }}>
+                            Book Now
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Explore More Button */}
+              <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+                <Link 
+                  to="/cars" 
+                  className="btn btn-primary"
+                  style={{
+                    padding: '1rem 3rem',
+                    fontSize: '1.1rem',
+                    textDecoration: 'none',
+                    display: 'inline-block',
+                  }}
+                >
+                  Explore More Cars →
+                </Link>
+              </div>
+            </>
           )}
+        </section>
+
+        {/* Customer Testimonials */}
+        <section style={{ 
+          marginTop: '5rem', 
+          marginBottom: '4rem',
+          textAlign: 'center',
+        }}>
+          <h2 style={{ 
+            fontSize: '2.5rem', 
+            marginBottom: '1rem',
+            color: '#1a1a1a',
+          }}>
+            What Our Customers Say
+          </h2>
+          <p style={{ 
+            color: '#6c757d', 
+            fontSize: '1.1rem',
+            marginBottom: '3rem',
+            maxWidth: '800px',
+            margin: '0 auto 3rem auto',
+          }}>
+            Discover why discerning travelers choose CarRental for their luxury car accommodations around the world.
+          </p>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '2rem',
+            maxWidth: '1200px',
+            margin: '0 auto',
+          }}>
+            {/* Testimonial 1 */}
+            <div style={{
+              background: 'white',
+              padding: '2rem',
+              borderRadius: '1rem',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              textAlign: 'left',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop"
+                  alt="Emma Rodriguez"
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    marginRight: '1rem',
+                    border: '2px solid #e0e0e0',
+                  }}
+                />
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#1a1a1a' }}>Emma Rodriguez</h4>
+                  <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Mumbai, India</p>
+                </div>
+              </div>
+              <div style={{ marginBottom: '1rem' }}>
+                {[1,2,3,4,5].map(star => (
+                  <span key={star} style={{ color: '#ffc107', fontSize: '1.2rem' }}>★</span>
+                ))}
+              </div>
+              <p style={{ color: '#495057', lineHeight: '1.6', margin: 0 }}>
+                "I've rented cars from various companies, but the experience with CarRental was exceptional."
+              </p>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div style={{
+              background: 'white',
+              padding: '2rem',
+              borderRadius: '1rem',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              textAlign: 'left',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop"
+                  alt="John Smith"
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    marginRight: '1rem',
+                    border: '2px solid #e0e0e0',
+                  }}
+                />
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#1a1a1a' }}>John Smith</h4>
+                  <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Delhi, India</p>
+                </div>
+              </div>
+              <div style={{ marginBottom: '1rem' }}>
+                {[1,2,3,4,5].map(star => (
+                  <span key={star} style={{ color: '#ffc107', fontSize: '1.2rem' }}>★</span>
+                ))}
+              </div>
+              <p style={{ color: '#495057', lineHeight: '1.6', margin: 0 }}>
+                "CarRental made my trip so much easier. The car was delivered right to my door, and the customer service was fantastic!"
+              </p>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div style={{
+              background: 'white',
+              padding: '2rem',
+              borderRadius: '1rem',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              textAlign: 'left',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop"
+                  alt="Ava Johnson"
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    marginRight: '1rem',
+                    border: '2px solid #e0e0e0',
+                  }}
+                />
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#1a1a1a' }}>Ava Johnson</h4>
+                  <p style={{ margin: 0, color: '#6c757d', fontSize: '0.9rem' }}>Bangalore, India</p>
+                </div>
+              </div>
+              <div style={{ marginBottom: '1rem' }}>
+                {[1,2,3,4,5].map(star => (
+                  <span key={star} style={{ color: '#ffc107', fontSize: '1.2rem' }}>★</span>
+                ))}
+              </div>
+              <p style={{ color: '#495057', lineHeight: '1.6', margin: 0 }}>
+                "I highly recommend CarRental! Their fleet is amazing, and I always feel like I'm getting the best deal with excellent service."
+              </p>
+            </div>
+          </div>
         </section>
       </div>
     </div>

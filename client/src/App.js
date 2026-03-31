@@ -18,10 +18,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Cars from './pages/Cars';
 import CarDetails from './pages/CarDetails';
 import BookingForm from './pages/BookingForm';
 import BookingHistory from './pages/BookingHistory';
 import BookingDetails from './pages/BookingDetails';
+import Payment from './pages/Payment';
 import UserProfile from './pages/UserProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import ManageCars from './pages/ManageCars';
@@ -38,6 +40,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/cars" element={<Cars />} />
             <Route path="/cars/:carId" element={<CarDetails />} />
 
             {/* Customer Protected Routes */}
@@ -52,6 +55,10 @@ function App() {
             <Route
               path="/bookings/:bookingId"
               element={<ProtectedRoute><BookingDetails /></ProtectedRoute>}
+            />
+            <Route
+              path="/payment/:bookingId"
+              element={<ProtectedRoute><Payment /></ProtectedRoute>}
             />
             <Route
               path="/profile"
